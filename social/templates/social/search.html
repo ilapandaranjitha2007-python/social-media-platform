@@ -1,0 +1,93 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search - ConnectHub</title>
+    <link rel="stylesheet" href="{% static 'social/style.css' %}">
+</head>
+
+<body>
+
+<nav class="navbar">
+    <div class="logo">ConnectHub</div>
+
+    <form method="GET" action="{% url 'search_users' %}" class="search-box">
+        🔍
+        <input type="text" name="q" value="{{ query }}" placeholder="Search users...">
+    </form>
+
+    <div class="nav-links">
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'explore' %}">Explore</a>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'profile' user.username %}">Profile</a>
+            <a href="{% url 'logout' %}">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </div>
+</nav>
+
+<div class="main-container">
+
+    <div class="content">
+
+        <div class="section-card">
+
+            <h2>Search Results</h2>
+
+            {% if query %}
+                <p class="search-title">
+                    Results for "<strong>{{ query }}</strong>"
+                </p>
+            {% endif %}
+
+            {% if users %}
+
+                {% for person in users %}
+
+                <div class="user-result">
+
+                    <div class="avatar">
+                        {{ person.username|first|upper }}
+                    </div>
+
+                    <div class="user-info">
+                        <a href="{% url 'profile' person.username %}">
+                            <strong>@{{ person.username }}</strong>
+                        </a>
+
+                        {% if person.profile.bio %}
+                            <p>{{ person.profile.bio|truncatechars:80 }}</p>
+                        {% else %}
+                            <p>Connect with this user on ConnectHub.</p>
+                        {% endif %}
+                    </div>
+
+                    <a href="{% url 'profile' person.username %}" class="view-profile">
+                        View Profile
+                    </a>
+
+                </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-state">
+                    <h3>😕 No users found</h3>
+                    <p>Try searching with another username.</p>
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

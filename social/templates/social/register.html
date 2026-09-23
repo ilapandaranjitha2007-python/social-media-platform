@@ -1,0 +1,118 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Create Account - ConnectHub</title>
+
+    <link rel="stylesheet"
+          href="{% static 'social/style.css' %}">
+
+</head>
+
+<body class="auth-body">
+
+<div class="auth-container">
+
+    <div class="auth-brand">
+
+        <h1>ConnectHub</h1>
+
+        <p>Connect. Share. Discover.</p>
+
+    </div>
+
+
+    <div class="auth-card">
+
+        <div class="auth-icon">
+            🚀
+        </div>
+
+        <h2>Create Account</h2>
+
+        <p class="auth-subtitle">
+            Join the ConnectHub community
+        </p>
+
+
+        {% if error %}
+
+        <div class="error-message">
+            {{ error }}
+        </div>
+
+        {% endif %}
+
+
+        <form method="POST">
+
+            {% csrf_token %}
+
+
+            <label>Username</label>
+
+            <input
+                type="text"
+                name="username"
+                placeholder="Choose a username"
+                required
+            >
+
+
+            <label>Password</label>
+
+            <input
+                type="password"
+                name="password"
+                placeholder="Create a password"
+                required
+            >
+
+
+            <button type="submit"
+                    class="auth-button">
+
+                Create Account
+
+            </button>
+
+        </form>
+
+
+        <div class="auth-divider">
+            <span>OR</span>
+        </div>
+
+
+        <p class="auth-footer">
+
+            Already have an account?
+
+            <a href="{% url 'login' %}">
+                Login
+            </a>
+
+        </p>
+
+    </div>
+
+
+    <a href="{% url 'home' %}"
+       class="back-home">
+
+        ← Back to ConnectHub
+
+    </a>
+
+</div>
+
+</body>
+</html>

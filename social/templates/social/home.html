@@ -1,0 +1,515 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ConnectHub</title>
+
+    <link rel="stylesheet"
+          href="{% static 'social/style.css' %}">
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <a href="{% url 'home' %}" class="logo">
+            ConnectHub
+        </a>
+
+        <form method="GET"
+              action="{% url 'search_users' %}"
+              class="search-box">
+
+            🔍
+
+            <input
+                type="text"
+                name="q"
+                placeholder="Search users..."
+            >
+
+        </form>
+
+
+        <div class="nav-links">
+
+            <a href="{% url 'home' %}">
+                🏠
+                <span>Home</span>
+            </a>
+
+            <a href="{% url 'explore' %}">
+                🌎
+                <span>Explore</span>
+            </a>
+
+            {% if user.is_authenticated %}
+
+            <a href="{% url 'notifications' %}">
+                🔔
+                <span>Notifications</span>
+            </a>
+
+            <a href="{% url 'profile' user.username %}">
+                👤
+                <span>Profile</span>
+            </a>
+
+            <a href="{% url 'logout' %}">
+                🚪
+                <span>Logout</span>
+            </a>
+
+            {% else %}
+
+            <a href="{% url 'login' %}">
+                Login
+            </a>
+
+            <a href="{% url 'register' %}">
+                Register
+            </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- MAIN -->
+
+<div class="main-container">
+
+
+    <!-- LEFT SIDEBAR -->
+
+    <aside class="left-sidebar">
+
+        {% if user.is_authenticated %}
+
+        <div class="profile-mini">
+
+            <div class="big-avatar">
+
+                {{ user.username|first|upper }}
+
+            </div>
+
+            <h3>
+                @{{ user.username }}
+            </h3>
+
+            <p>
+                Connect and share with people.
+            </p>
+
+            <a href="{% url 'profile' user.username %}"
+               class="profile-button">
+
+                View Profile
+
+            </a>
+
+        </div>
+
+        {% endif %}
+
+
+        <div class="side-menu">
+
+            <a href="{% url 'home' %}">
+                🏠 Home
+            </a>
+
+            <a href="{% url 'explore' %}">
+                🌎 Explore
+            </a>
+
+            {% if user.is_authenticated %}
+
+            <a href="{% url 'notifications' %}">
+                🔔 Notifications
+            </a>
+
+            <a href="{% url 'profile' user.username %}">
+                👤 My Profile
+            </a>
+
+            <a href="{% url 'create_post' %}">
+                ➕ Create Post
+            </a>
+
+            {% endif %}
+
+        </div>
+
+    </aside>
+
+
+
+    <!-- FEED -->
+
+    <main class="feed">
+
+
+        <!-- CREATE POST -->
+
+        {% if user.is_authenticated %}
+
+        <div class="create-card">
+
+            <div class="create-header">
+
+                <div class="avatar">
+                    {{ user.username|first|upper }}
+                </div>
+
+                <a href="{% url 'create_post' %}">
+                    What's on your mind, {{ user.username }}?
+                </a>
+
+            </div>
+
+            <div class="create-options">
+
+                <a href="{% url 'create_post' %}">
+                    📷 Photo
+                </a>
+
+                <a href="{% url 'create_post' %}">
+                    ✍️ Post
+                </a>
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- POSTS -->
+
+        {% for post in posts %}
+
+        <article class="post-card">
+
+
+            <!-- POST HEADER -->
+
+            <div class="post-header">
+
+                <div class="post-user">
+
+                    <div class="avatar">
+
+                        {{ post.user.username|first|upper }}
+
+                    </div>
+
+                    <div>
+
+                        <a href="{% url 'profile' post.user.username %}"
+                           class="username">
+
+                            @{{ post.user.username }}
+
+                        </a>
+
+                        <span class="post-time">
+
+                            {{ post.created_at|timesince }} ago
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <button class="more-button">
+                    ⋯
+                </button>
+
+            </div>
+
+
+            <!-- CONTENT -->
+
+            <div class="post-content">
+
+                <p>
+                    {{ post.content }}
+                </p>
+
+            </div>
+
+
+            <!-- IMAGE -->
+
+            {% if post.image %}
+
+            <div class="post-image">
+
+                <img src="{{ post.image.url }}"
+                     alt="Post image">
+
+            </div>
+
+            {% endif %}
+
+
+            <!-- POST STATS -->
+
+            <div class="post-stats">
+
+                <span>
+                    ❤️
+                    {{ post.like_set.count }}
+                    likes
+                </span>
+
+                <span>
+                    💬
+                    {{ post.comment_set.count }}
+                    comments
+                </span>
+
+            </div>
+
+
+            <!-- ACTIONS -->
+
+            <div class="post-actions">
+
+                {% if user.is_authenticated %}
+
+                <a href="{% url 'like_post' post.id %}">
+
+                    ❤️ Like
+
+                </a>
+
+                {% else %}
+
+                <a href="{% url 'login' %}">
+                    ❤️ Like
+                </a>
+
+                {% endif %}
+
+
+                <a href="#comments">
+
+                    💬 Comment
+
+                </a>
+
+
+                <button onclick="sharePost('{{ post.content|escapejs }}')">
+
+                    ↗️ Share
+
+                </button>
+
+            </div>
+
+
+            <!-- COMMENTS -->
+
+            <div class="comments-section"
+                 id="comments">
+
+                {% for comment in post.comment_set.all %}
+
+                <div class="comment">
+
+                    <div class="comment-avatar">
+
+                        {{ comment.user.username|first|upper }}
+
+                    </div>
+
+                    <div class="comment-body">
+
+                        <strong>
+                            @{{ comment.user.username }}
+                        </strong>
+
+                        <p>
+                            {{ comment.text }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+                {% empty %}
+
+                <p class="no-comments">
+                    No comments yet.
+                </p>
+
+                {% endfor %}
+
+
+                {% if user.is_authenticated %}
+
+                <form method="POST"
+                      action="{% url 'comment_post' post.id %}"
+                      class="comment-form">
+
+                    {% csrf_token %}
+
+                    <input
+                        type="text"
+                        name="text"
+                        placeholder="Write a comment..."
+                        required
+                    >
+
+                    <button type="submit">
+                        ➤
+                    </button>
+
+                </form>
+
+                {% endif %}
+
+            </div>
+
+        </article>
+
+        {% empty %}
+
+        <div class="empty-feed">
+
+            <div class="empty-icon">
+                📰
+            </div>
+
+            <h2>
+                No posts yet
+            </h2>
+
+            <p>
+                Be the first person to share something!
+            </p>
+
+            {% if user.is_authenticated %}
+
+            <a href="{% url 'create_post' %}">
+                Create your first post
+            </a>
+
+            {% endif %}
+
+        </div>
+
+        {% endfor %}
+
+    </main>
+
+
+
+    <!-- RIGHT SIDEBAR -->
+
+    <aside class="right-sidebar">
+
+        <div class="info-card">
+
+            <h3>
+                ✨ ConnectHub
+            </h3>
+
+            <p>
+                Share your thoughts, connect with people,
+                and discover new communities.
+            </p>
+
+        </div>
+
+
+        <div class="info-card">
+
+            <h3>
+                🚀 Quick Links
+            </h3>
+
+            <a href="{% url 'explore' %}">
+                Explore Users
+            </a>
+
+            {% if user.is_authenticated %}
+
+            <a href="{% url 'notifications' %}">
+                Notifications
+            </a>
+
+            <a href="{% url 'create_post' %}">
+                Create a Post
+            </a>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="info-card">
+
+            <h3>
+                💡 Community
+            </h3>
+
+            <p>
+                Be respectful and make ConnectHub
+                a friendly place for everyone.
+            </p>
+
+        </div>
+
+    </aside>
+
+</div>
+
+
+<script>
+
+function sharePost(content) {
+
+    if (navigator.share) {
+
+        navigator.share({
+            title: "ConnectHub Post",
+            text: content
+        });
+
+    } else {
+
+        navigator.clipboard.writeText(content);
+
+        alert("Post copied to clipboard!");
+
+    }
+
+}
+
+</script>
+
+</body>
+
+</html>

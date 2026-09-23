@@ -1,0 +1,236 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>@{{ profile_user.username }} - ConnectHub</title>
+
+    <link rel="stylesheet"
+          href="{% static 'social/style.css' %}">
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <a href="{% url 'home' %}" class="logo">
+            ConnectHub
+        </a>
+
+        <form method="GET"
+              action="{% url 'search_users' %}"
+              class="search-box">
+
+            🔍
+
+            <input
+                type="text"
+                name="q"
+                placeholder="Search users..."
+            >
+
+        </form>
+
+        <div class="nav-links">
+
+            <a href="{% url 'home' %}">
+                🏠 <span>Home</span>
+            </a>
+
+            <a href="{% url 'explore' %}">
+                🌎 <span>Explore</span>
+            </a>
+
+            {% if user.is_authenticated %}
+
+            <a href="{% url 'notifications' %}">
+                🔔 <span>Notifications</span>
+            </a>
+
+            <a href="{% url 'profile' user.username %}">
+                👤 <span>Profile</span>
+            </a>
+
+            <a href="{% url 'logout' %}">
+                🚪 <span>Logout</span>
+            </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<!-- PROFILE -->
+
+<div class="profile-page">
+
+    <div class="profile-cover"></div>
+
+    <div class="profile-main">
+
+        <div class="profile-avatar-large">
+            {{ profile_user.username|first|upper }}
+        </div>
+
+
+        <div class="profile-details">
+
+            <h1>
+                @{{ profile_user.username }}
+            </h1>
+
+            {% if profile_user.profile.bio %}
+
+            <p>
+                {{ profile_user.profile.bio }}
+            </p>
+
+            {% else %}
+
+            <p>
+                Welcome to my ConnectHub profile 👋
+            </p>
+
+            {% endif %}
+
+        </div>
+
+
+        {% if user.is_authenticated and user != profile_user %}
+
+        <a href="{% url 'follow_user' profile_user.username %}"
+           class="follow-button">
+
+            {% if is_following %}
+                ✓ Following
+            {% else %}
+                + Follow
+            {% endif %}
+
+        </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- PROFILE STATS -->
+
+    <div class="profile-stats">
+
+        <div>
+            <strong>{{ posts.count }}</strong>
+            <span>Posts</span>
+        </div>
+
+        <div>
+            <strong>{{ followers }}</strong>
+            <span>Followers</span>
+        </div>
+
+        <div>
+            <strong>{{ following }}</strong>
+            <span>Following</span>
+        </div>
+
+    </div>
+
+
+    <!-- POSTS -->
+
+    <div class="profile-posts">
+
+        <div class="profile-post-title">
+            <h2>📸 Posts</h2>
+        </div>
+
+
+        {% if posts %}
+
+        <div class="profile-post-grid">
+
+            {% for post in posts %}
+
+            <div class="profile-post">
+
+                {% if post.image %}
+
+                <img src="{{ post.image.url }}"
+                     alt="Post image">
+
+                {% else %}
+
+                <div class="text-post">
+                    {{ post.content }}
+                </div>
+
+                {% endif %}
+
+                <div class="profile-post-overlay">
+
+                    ❤️ {{ post.like_set.count }}
+
+                    &nbsp;&nbsp;
+
+                    💬 {{ post.comment_set.count }}
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-feed">
+
+            <div class="empty-icon">
+                📸
+            </div>
+
+            <h2>
+                No posts yet
+            </h2>
+
+            {% if user == profile_user %}
+
+            <p>
+                Share your first post with ConnectHub.
+            </p>
+
+            <a href="{% url 'create_post' %}">
+                Create Post
+            </a>
+
+            {% else %}
+
+            <p>
+                This user hasn't shared any posts yet.
+            </p>
+
+            {% endif %}
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+</html>
