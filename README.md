@@ -75,6 +75,80 @@ social-media-platform/
 ├── requirements.txt
 ├── .gitignore
 └── README.md
+```
+
+---
+
+## ⚙️ Installation and Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/ilapandaranjitha2007-python/social-media-platform.git
+```
+
+### 2. Open the Project Folder
+
+```bash
+cd social-media-platform
+```
+
+### 3. Create a Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+### 4. Activate the Virtual Environment
+
+For Windows PowerShell:
+
+```powershell
+venv\Scripts\Activate.ps1
+```
+
+If PowerShell shows an execution-policy error:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy RemoteSigned
+```
+
+Then activate the virtual environment:
+
+```powershell
+venv\Scripts\Activate.ps1
+```
+
+### 5. Install Required Packages
+
+```bash
+pip install -r requirements.txt
+```
+
+### 6. Apply Database Migrations
+
+```bash
+python manage.py migrate
+```
+
+### 7. Create an Admin Account
+
+```bash
+python manage.py createsuperuser
+```
+
+### 8. Run the Development Server
+
+```bash
+python manage.py runserver
+```
+
+Open the application in your browser:
+
+```text
+http://127.0.0.1:8000/
+```
+
 ---
 
 ## 👨‍💼 Admin Panel
@@ -83,6 +157,18 @@ The Django admin panel can be accessed at:
 
 ```text
 http://127.0.0.1:8000/admin/
+```
+
+The administrator can manage:
+
+- Users
+- Profiles
+- Posts
+- Likes
+- Comments
+- Follows
+- Notifications
+
 ---
 
 ## 🌐 How the Application Works
@@ -149,7 +235,6 @@ The profile page displays:
 - Followers
 - Following count
 
----
 ---
 
 ## 🗄️ Database Models
