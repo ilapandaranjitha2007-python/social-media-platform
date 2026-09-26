@@ -39,7 +39,7 @@ The application allows users to create accounts, create and share posts, upload 
 ## 📂 Project Structure
 
 ```text
-social-media-platform/
+codealpha_social_media/
 │
 ├── social/
 │   ├── migrations/
@@ -84,13 +84,13 @@ social-media-platform/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/ilapandaranjitha2007-python/social-media-platform.git
+git clone https://github.com/ilapandaranjitha2007-python/codealpha_social_media.git
 ```
 
 ### 2. Open the Project Folder
 
 ```bash
-cd social-media-platform
+cd codealpha_social_media
 ```
 
 ### 3. Create a Virtual Environment
